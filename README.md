@@ -3,8 +3,10 @@ Complies data of stack overflow questions and Github projects containing keyword
 
 Prerequisites: 
 
-Requests 
 
-BeautifulSoup
 
-plotly
+Requests: pip install requests
+
+BeautifulSoup: pip install beautifulsoup4
+
+plotly: pip install plotly
