@@ -3,7 +3,6 @@ Complies data of stack overflow questions and Github projects containing keyword
 
 Prerequisites: 
 
-
 Requests,
 BeautifulSoup
 plotly
