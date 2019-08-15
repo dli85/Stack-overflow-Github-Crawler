@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import plotly.graph_objects as go
+import csv
+import os
+
+fig = go.Figure()
 
 git_total_count = 0
 stack_total_count = 0
@@ -11,6 +15,11 @@ git_current_progress = 0
 
 stack_total_progress = 0
 stack_current_progress = 0
+
+git_id = 1
+
+stack_id = 1
+
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
     """
     Call in a loop to create terminal progress bar
@@ -31,6 +40,17 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     #if iteration == total:
     #    print()
 
+def write_csv(data_matrix, header, csv_output_name):
+    with open(csv_output_name, mode='w') as csv_file:
+        data_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        data_writer.writerow(header)
+
+        for i in range( len(data_matrix)):
+            data_writer.writerow(data_matrix[i])
+
+
+
 def run_x_times_stack(x):
 
     if(x == 0):
@@ -50,8 +70,12 @@ def run_x_times_stack(x):
         i+=1
         time.sleep(3)
 
+
+
+    write_csv(data_matrix, ['Stack id', 'Question Title', 'Question Link', 'Number of Upvotes', 'Date Created', 'Views', 'Last Active'], 'stack.csv')
+
     tempList = []
-    filler_data_matrix = initialize_twodlist(6, stack_total_count)
+    filler_data_matrix = initialize_twodlist(7, stack_total_count)
 
     #
     for j in range(len(data_matrix[0])):
@@ -66,7 +90,7 @@ def run_x_times_stack(x):
             count += 1
 
     fig = go.Figure(data=[go.Table(header=dict(
-        values=['Question Title', 'Question Link', 'Number of Upvotes', 'Date Created', 'Views', 'Last Active']),
+        values=['Stack id', 'Question Title', 'Question Link', 'Number of Upvotes', 'Date Created', 'Last Active', 'Views']),
         cells=dict(values=filler_data_matrix)),
 
     ])
@@ -93,8 +117,12 @@ def run_x_times_git(x):
         i+=1
         time.sleep(3)
 
+
+    write_csv(data_matrix, ['Project_id', 'Project Name', 'Project Link', 'Project Issues', 'Pull Requests', 'Watch', 'Stars', 'Fork'], 'github.csv')
+
+
     tempList = []
-    filler_data_matrix = initialize_twodlist(7, git_total_count)
+    filler_data_matrix = initialize_twodlist(8, git_total_count)
     for j in range(len(data_matrix[0])):
         for i in range(len(data_matrix)):
             tempList.append(data_matrix[i][j])
@@ -108,7 +136,7 @@ def run_x_times_git(x):
             count+=1
 
     fig = go.Figure(data=[go.Table(
-                        header=dict(values=["Project Name", "Project Link", "Project Issues", "Pull Requests", "Watch", "Stars", "Fork"]),
+                        header=dict(values=["Project id", "Project Name", "Project Link", "Project Issues", "Pull Requests", "Watch", "Stars", "Fork"]),
                             cells=dict(values=filler_data_matrix))
                           ])
     fig.show()
@@ -130,6 +158,8 @@ def github_crawler(page, data_matrix):
     global git_total_progress
     global git_current_progress
 
+    global git_id
+
     urlPart1 = "https://github.com/search?p=" + str(page)
     urlPart2 = "&q=tensorflow&ref=simplesearch&type=Repositories&utf8=✓"
     super_url = urlPart1 + urlPart2
@@ -137,7 +167,6 @@ def github_crawler(page, data_matrix):
     source_code = requests.get(super_url)
     plain_text = source_code.text
     soup = BeautifulSoup(plain_text, 'html5lib')
-
     count = 0
 
     project_count = 0
@@ -167,11 +196,17 @@ def github_crawler(page, data_matrix):
             pretty_stars = ""
             pretty_fork = ""
 
+
+
+
             href = "http://github.com/" + link2.get('href')
             project_title = ' '.join(link2.findAll(text=True))
             project_link = href
             project_soup = BeautifulSoup(requests.get(project_link).text, 'html5lib')
             counter = 0 #0 for issues, 1 for pull requests
+            git_id = git_id
+
+
 
             pretty_name = project_title
             pretty_link = href
@@ -189,6 +224,10 @@ def github_crawler(page, data_matrix):
 
                     break
                 counter+=1
+
+
+
+
 
 
 
@@ -212,9 +251,11 @@ def github_crawler(page, data_matrix):
 
                 counter+=1
 
-            data_matrix.append([pretty_name, pretty_link, pretty_issues, pretty_pull_requests, pretty_watch, pretty_stars, pretty_fork])
+            data_matrix.append([git_id, pretty_name, pretty_link, pretty_issues, pretty_pull_requests, pretty_watch, pretty_stars, pretty_fork])
 
             git_current_progress += increase
+
+            git_id += 1
 
             printProgressBar(git_current_progress, git_total_progress)
             #print(git_current_progress, end='\r')
@@ -229,6 +270,8 @@ def github_crawler(page, data_matrix):
 def sof_spider(page, data_matrix):
     global stack_total_progress
     global stack_current_progress
+
+    global stack_id
 
 
     urlPart1 = "https://stackoverflow.com/search?page=" + str(page)
@@ -276,7 +319,7 @@ def sof_spider(page, data_matrix):
             data_question_date_created = ""
             data_question_views = ""
             data_question_last_active = ""
-
+            stack_id = stack_id
 
 
             data_question_title = question_title
@@ -293,34 +336,45 @@ def sof_spider(page, data_matrix):
 
             counter = 0;
 
-            for question_link in question_soup.findAll('td', {'style': "padding-left: 10px"}):
-                if(counter == 0):
-                    date_created = ' '.join(question_link.findAll(text=True)).lstrip().rstrip()
-                    data_question_date_created = date_created
-                if(counter == 1):
-                    view_count = ' '.join(question_link.findAll(text=True)).lstrip().rstrip()
-                    data_question_views = view_count
-                if(counter == 2):
-                    last_active = ' '.join(question_link.findAll(text=True)).lstrip().rstrip()
-                    data_question_last_active = last_active
+            for question_link in question_soup.findAll('div', {'class': "grid fw-wrap pb8 mb16 bb bc-black-2"}):
+                for question_link2 in question_link.findAll('div'):
+                    if(counter == 0):
+                        date_created = ' '.join(question_link2.findAll(text=True)).replace("Asked", "").lstrip().rstrip()
+                        data_question_date_created = date_created
+                    if(counter == 1):
+                        view_count = ' '.join(question_link2.findAll(text=True)).replace("Active","").lstrip().rstrip()
+                        data_question_views = view_count
+                    if(counter == 2):
+                        last_active = ' '.join(question_link2.findAll(text=True)).replace("Viewed","").replace("times", "").lstrip().rstrip()
+                        data_question_last_active = last_active
 
-                counter+=1
+                    counter+=1
 
 
-            data_matrix.append([data_question_title, data_question_link, data_question_upvotes, data_question_date_created, data_question_views, data_question_last_active])
+            data_matrix.append([stack_id, data_question_title, data_question_link, data_question_upvotes, data_question_date_created, data_question_views,data_question_last_active])
             count += 1
 
             stack_current_progress += increase
+
+            stack_id+=1
 
             printProgressBar(stack_current_progress, stack_total_progress)
 
     return data_matrix
 
 
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
 
-
-
+createFolder("csv_files")
 
 run_x_times_git(int(input("Please enter the number of pages that you want to crawl on github: ")))
 
+
+
 run_x_times_stack(int(input("Please enter the number of pages that you want to crawl on Stack Overflow: ")))
+
