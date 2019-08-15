@@ -10,3 +10,5 @@ Requests: pip install requests
 BeautifulSoup: pip install beautifulsoup4
 
 plotly: pip install plotly
+
+Selenium
