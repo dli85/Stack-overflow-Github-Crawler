@@ -25,6 +25,8 @@ plotly: pip install plotly
 
 urllib3: pip install urllib3
 
-Selenium: pip install selenium(Only used for contributors.py Most likely you will get an error message saying chrome web driver needs to be added to PATH. If this is the case, download the chrome web driver for your version of chrome and add it to PATH)
+pip install html5lib
+
+Selenium: pip install selenium(Only used for contributors.py Most likely you will get an error message saying chromedriver needs to be added to PATH. If this is the case, download the chrome web driver for your version of chrome and add it to PATH)
 
 The Prerequisities must be installed or else the code will not work.
