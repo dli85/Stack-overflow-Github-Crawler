@@ -267,9 +267,10 @@ def get_profiles(num_users):
 
         rotation = 1 #When rotation is 5, it means we are at the follower tag
         for faf in profile_soup.findAll('a', {'class' : 'UnderlineNav-item mr-0 mr-md-1 mr-lg-3'}):
-            if(rotation == 5):
+            if(rotation == 4):
                 for daf in faf.findAll('span', {'class' : 'Counter hide-lg hide-md hide-sm'}):
-                    followers = ' '.join(faf.findAll(text=True)).rstrip().lstrip().replace(",","")
+                    followers = ' '.join(daf.findAll(text=True)).rstrip().lstrip().replace(",","")
+                    break
             rotation += 1
 
 
@@ -294,7 +295,9 @@ def get_profiles(num_users):
         else:
             result.append(does_website)
 
-        result.append(followers)
+        result.append(link)
+
+        result.append(followers.lstrip().rstrip().replace(" ",""))
 
 
         if(count >= num_users):
@@ -314,7 +317,7 @@ def get_profiles(num_users):
 
 get_profiles(int(input("Input the number of users(starting from the top) to create profiles for")))
 
-write_csv(profiles, ['Name', 'Username', 'Email', 'Website', 'Followers'], 'profiles.csv')
+write_csv(profiles, ['Name', 'Username', 'Email', 'Website', 'github profile', 'Followers'], 'profiles.csv')
 
 #for i in project_data:
     #print (i)
