@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import time
 import plotly.graph_objects as go
 import csv
-import os
 
 fig = go.Figure()
 
@@ -361,16 +360,6 @@ def sof_spider(page, data_matrix):
             printProgressBar(stack_current_progress, stack_total_progress)
 
     return data_matrix
-
-
-def createFolder(directory):
-    try:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-    except OSError:
-        print ('Error: Creating directory. ' +  directory)
-
-createFolder("csv_files")
 
 run_x_times_git(int(input("Please enter the number of pages that you want to crawl on github: ")))
 
