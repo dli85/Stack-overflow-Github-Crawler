@@ -13,20 +13,18 @@ Crawler Files: Contains all the output files all of all three programs. The file
 
 
 
-Overall, there should not be any errors. Only a few errors are common:
-1. Not all the prerequisites are installed
-2. A invalid input is entered(All inputs must be positive integers)
-3. "Chromedriver" not in path. If this is the case(only for the third program), you download chrome driver for your version of chrome and add it to path. Instructions should be in the error message.
-4. The program "contributors.py" may freeze or crash. If the output log of the program stop outputting lines, this means that program has frozen. Simply run the program again to resolve the issue. If the program stops and does not display a table or output any csv files, this means the program has crashed while running. Simply reopen command prompt and run the program again. This is simply due to the nature of the selenium library.
-5. All other errors are because you have acecessed a website too many times and the crawler is unable to fetch any data from the website because the website has temporary blocked your ip. This causes the code to fail as certain values will be set to empty string or 0, causing functions to fail. If this is the case, wait a few minutes before running the program again.
+Possible Errors:
+1. "Chromedriver" not in path. If this is the case(only for the third program), you download chrome driver for your version of chrome and add it to path. Instructions should be in the error message.
+2. The program "contributors.py" may freeze or crash. If the output log of the program stop outputting lines, this means that program has frozen. Simply run the program again to resolve the issue. If the program stops and does not display a table or output any csv files, this means the program has crashed while running. Simply reopen command prompt and run the program again. This is simply due to the nature of the selenium library.
+3. All other errors are because you have acecessed a website too many times and the crawler is unable to fetch any data from the website because the website has temporary blocked your ip. This causes the code to fail as certain values will be set to empty string or 0, causing functions to fail. If this is the case, wait a few minutes before running the program again.
 
 
 
 
 
-Prerequisites(NEED THESE TO WORK). On the left of the colon is the name of the library and on the right of the colon is the pip command to install said library. If for any reason you had downloaded all the prerequisites but a program crashes with the error message that "xxxx" was missing and you may need to download a library, simply download and install the library detailed in the error message with pip: 
+Prerequisites. On the left of the colon is the name of the library and on the right of the colon is the pip command to install said library. If for any reason you had downloaded all the prerequisites but a program crashes with the error message that "xxxx" was missing and you may need to download a library, simply download and install the library detailed in the error message with pip: 
 
-Python 3.6(Not a library)(Must be added to PATH)
+Python 3.6
 
 Requests: pip install requests
 
@@ -41,5 +39,3 @@ lxml(parser): pip install lxml
 html5lib(parser): pip install html5lib
 
 Selenium: pip install selenium(Only used for contributors.py Most likely you will get an error message saying chromedriver needs to be added to PATH. If this is the case, download the chrome web driver for your version of chrome and add it to PATH)
-
-The Prerequisities must be installed or else the code will not work.
